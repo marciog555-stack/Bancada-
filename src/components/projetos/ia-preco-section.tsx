@@ -63,7 +63,29 @@ export function IaPrecoSection({ projeto }: { projeto: Projeto }) {
           <p className="text-lg font-semibold">
             {formatBRL(sugestao.faixaMin)} – {formatBRL(sugestao.faixaMax)}
           </p>
+          {sugestao.precoPorM2 != null ? (
+            <p className="text-muted-foreground">
+              ≈ {formatBRL(sugestao.precoPorM2)}/m²
+            </p>
+          ) : null}
+          {sugestao.custoMaterialZerado ? (
+            <p className="rounded-md border border-primary/40 bg-primary/10 px-3 py-2 text-xs text-primary">
+              Nenhum custo de material lançado ainda — esse valor cobre só mão de obra.
+            </p>
+          ) : null}
           <p className="text-muted-foreground">{sugestao.justificativa}</p>
+          {sugestao.dadosFaltando.length > 0 ? (
+            <div>
+              <p className="text-xs font-medium text-muted-foreground">
+                Pra uma estimativa mais precisa, informe:
+              </p>
+              <ul className="list-disc pl-4 text-xs text-muted-foreground">
+                {sugestao.dadosFaltando.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           <Button
             variant="secondary"
             size="sm"
