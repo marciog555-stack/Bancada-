@@ -3,8 +3,35 @@ import { z } from 'zod'
 import { getSupabaseServerClient } from '#/lib/supabase/server'
 import { chamarClaude, limparCercasJson } from '#/lib/server/claude'
 import { saoSemelhantes } from '#/lib/similaridade'
-import { labelTipoProjeto } from '#/lib/projeto-tipos'
+import { labelMaterialSistema, labelTipoProjeto } from '#/lib/projeto-tipos'
 import { extrairAreaM2 } from '#/lib/area'
+
+async function buscarModeloServico(
+  supabase: ReturnType<typeof getSupabaseServerClient>,
+  tipo: string,
+  materialSistema: string | null,
+): Promise<{ titulo: string; instrucoes: string } | null> {
+  if (materialSistema) {
+    const { data } = await supabase
+      .from('modelos_servico')
+      .select('titulo, instrucoes')
+      .eq('tipo', tipo)
+      .eq('material_sistema', materialSistema)
+      .limit(1)
+      .maybeSingle()
+    if (data) return data
+  }
+
+  const { data: generico } = await supabase
+    .from('modelos_servico')
+    .select('titulo, instrucoes')
+    .eq('tipo', tipo)
+    .is('material_sistema', null)
+    .limit(1)
+    .maybeSingle()
+
+  return generico ?? null
+}
 
 const planoSchema = z.object({
   ferramentas: z.array(
@@ -55,7 +82,7 @@ export const planejarProjeto = createServerFn({ method: 'POST' })
       await Promise.all([
         supabase
           .from('projetos')
-          .select('titulo, descricao, tipo')
+          .select('titulo, descricao, tipo, material_sistema')
           .eq('id', data.projetoId)
           .single(),
         supabase.from('ferramentas').select('id, nome, status'),
@@ -63,18 +90,32 @@ export const planejarProjeto = createServerFn({ method: 'POST' })
     if (projetoError) throw new Error('Projeto não encontrado.')
     if (ferramentasError) throw new Error(ferramentasError.message)
 
+    const modelo = await buscarModeloServico(supabase, projeto.tipo, projeto.material_sistema)
+
     const listaFerramentas = ferramentas
       .map((f) => `- ${f.nome} (${f.status === 'comprada' ? 'já tenho' : 'quero comprar'})`)
       .join('\n')
+
+    const blocoModelo = modelo
+      ? `Modelo cadastrado pra esse tipo de serviço/material — siga essas instruções à risca (é o jeito que eu faço):
+"${modelo.titulo}"
+${modelo.instrucoes}`
+      : 'Não há nenhum modelo cadastrado pra esse tipo de serviço/material. Use seu conhecimento geral, mas deixe isso claro no campo "observacoes" (que estou usando um método genérico, sem modelo específico).'
 
     const prompt = `Planeje o serviço abaixo pra mim.
 
 Título: ${projeto.titulo}
 Tipo: ${labelTipoProjeto(projeto.tipo)}
+Material do sistema: ${projeto.material_sistema ? labelMaterialSistema(projeto.material_sistema) : 'não informado'}
 Descrição: ${projeto.descricao ?? '(sem descrição)'}
+
+${blocoModelo}
 
 Minhas ferramentas cadastradas:
 ${listaFerramentas || '(nenhuma cadastrada ainda)'}
+
+Ao sugerir ferramentas, priorize as que eu já tenho ou já pretendo comprar (estão na
+lista acima) antes de sugerir ferramentas novas que não estão cadastradas.
 
 Responda SOMENTE com um JSON válido (sem cercas de markdown, sem texto antes ou depois), no formato exato:
 {
