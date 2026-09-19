@@ -91,12 +91,14 @@ Responda SOMENTE com um JSON válido (sem cercas de markdown, sem texto antes ou
     try {
       json = JSON.parse(limparCercasJson(resposta))
     } catch {
-      throw new Error('A IA respondeu num formato inesperado. Tenta de novo.')
+      // TODO: mensagem de diagnóstico temporária.
+      throw new Error(`[debug parse] ${resposta.slice(0, 500)}`)
     }
 
     const parseResult = planoSchema.safeParse(json)
     if (!parseResult.success) {
-      throw new Error('A IA respondeu num formato inesperado. Tenta de novo.')
+      // TODO: mensagem de diagnóstico temporária.
+      throw new Error(`[debug schema] ${JSON.stringify(parseResult.error.issues).slice(0, 500)}`)
     }
     const plano = parseResult.data
 
