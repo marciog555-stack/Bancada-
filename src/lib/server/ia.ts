@@ -218,7 +218,7 @@ export const sugerirPreco = createServerFn({ method: 'POST' })
     ] = await Promise.all([
       supabase
         .from('projetos')
-        .select('titulo, descricao, tipo, horas_estimadas_ia')
+        .select('titulo, descricao, tipo, material_sistema, horas_estimadas_ia')
         .eq('id', data.projetoId)
         .single(),
       supabase
@@ -257,6 +257,7 @@ export const sugerirPreco = createServerFn({ method: 'POST' })
 
 Título: ${projeto.titulo}
 Tipo de serviço: ${labelTipoProjeto(projeto.tipo)}
+Material do sistema: ${projeto.material_sistema ? labelMaterialSistema(projeto.material_sistema) : 'não informado'}
 Descrição: ${projeto.descricao ?? '(sem descrição)'}
 Área: ${areaM2 != null ? `${areaM2} m²` : 'não informada'}
 Horas estimadas: ${horasEstimadas != null ? `${horasEstimadas.toFixed(1)}h` : 'não informado'}
@@ -265,12 +266,14 @@ Materiais lançados:
 ${listaMateriais || '(nenhum material lançado ainda)'}
 Custo total de material: R$ ${custoMaterial.toFixed(2)}
 
-Considere o material específico citado no título/descrição pra ajustar o preço e a
-justificativa (por exemplo, forro de WPC é mais caro e mais trabalhoso de instalar
-que forro de PVC). Considere também o desgaste das minhas ferramentas no preço.
+Considere o material do sistema informado acima pra ajustar o preço e a
+justificativa — pra forro, por exemplo, WPC é mais caro e mais trabalhoso de
+instalar que PVC, então a mão de obra deve valer mais. Considere também o
+desgaste das minhas ferramentas no preço.
 
-Se for um serviço de forro e a área for conhecida, sugira também um preço por m²
-(campo "preco_por_m2"); senão deixe esse campo null.
+Se for um serviço de forro, sugira o preço de mão de obra por m² (campo
+"preco_por_m2") sempre que a área for conhecida; senão deixe esse campo null
+e cite a falta da área em "dados_faltando".
 
 Se o custo de material lançado for zero ou não informado, deixe claro na
 justificativa que a faixa sugerida cobre só mão de obra, sem material.
