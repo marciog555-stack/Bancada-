@@ -85,7 +85,7 @@ Responda SOMENTE com um JSON válido (sem cercas de markdown, sem texto antes ou
   "observacoes": ""
 }`
 
-    const resposta = await chamarClaude({ prompt, maxTokens: 2000 })
+    const resposta = await chamarClaude({ prompt, maxTokens: 3000 })
 
     let json: unknown
     try {

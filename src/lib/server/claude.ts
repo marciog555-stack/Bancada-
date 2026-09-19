@@ -34,15 +34,16 @@ export async function chamarClaude({
       system,
       messages: [{ role: 'user', content: prompt }],
     })
-    const bloco = message.content[0]
-    if (bloco.type !== 'text') {
+    const bloco = message.content.find((b) => b.type === 'text')
+    if (!bloco) {
       throw new Error('A IA respondeu num formato inesperado.')
     }
     return bloco.text
   } catch (error) {
-    // TODO: mensagem de diagnóstico temporária — trocar de volta por texto amigável.
-    const detalhe = error instanceof Error ? error.message : String(error)
-    throw new Error(`[debug] Não consegui falar com a IA: ${detalhe}`)
+    if (error instanceof Error && error.message === 'A IA respondeu num formato inesperado.') {
+      throw error
+    }
+    throw new Error('Não consegui falar com a IA agora. Tenta de novo em instantes.')
   }
 }
 
