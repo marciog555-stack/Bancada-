@@ -14,7 +14,7 @@ import { PontoSection } from '#/components/projetos/ponto-section'
 import { ProjetoFormDialog } from '#/components/projetos/projeto-form-dialog'
 import { ResumoCard } from '#/components/projetos/resumo-card'
 import { formatBRL } from '#/lib/format'
-import { labelStatusProjeto, labelTipoProjeto } from '#/lib/projeto-tipos'
+import { labelMaterialSistema, labelStatusProjeto, labelTipoProjeto } from '#/lib/projeto-tipos'
 import { excluirProjeto, obterProjeto } from '#/lib/server/projetos'
 import { obterCliente } from '#/lib/server/clientes'
 
@@ -102,6 +102,7 @@ function ProjetoDetailPage() {
         </div>
         <p className="text-sm text-muted-foreground">
           {labelTipoProjeto(projeto.tipo)}
+          {projeto.materialSistema ? ` · ${labelMaterialSistema(projeto.materialSistema)}` : ''}
           {projeto.valorCobrado != null ? ` · ${formatBRL(projeto.valorCobrado)}` : ''}
           {projeto.dataPrevista
             ? ` · previsto ${projeto.dataPrevista.split('-').reverse().join('/')}`

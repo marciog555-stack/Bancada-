@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { getSupabaseServerClient } from '#/lib/supabase/server'
-import { TIPOS_PROJETO, STATUS_PROJETO } from '#/lib/projeto-tipos'
+import { TIPOS_PROJETO, STATUS_PROJETO, MATERIAIS_SISTEMA } from '#/lib/projeto-tipos'
 
 export interface Projeto {
   id: string
@@ -10,6 +10,7 @@ export interface Projeto {
   descricao: string | null
   tipo: string
   status: string
+  materialSistema: string | null
   valorCobrado: number | null
   dataPrevista: string | null
   dataAgendada: string | null
@@ -25,6 +26,7 @@ function mapRow(row: Record<string, unknown>): Projeto {
     descricao: row.descricao as string | null,
     tipo: row.tipo as string,
     status: row.status as string,
+    materialSistema: row.material_sistema as string | null,
     valorCobrado: row.valor_cobrado as number | null,
     dataPrevista: row.data_prevista as string | null,
     dataAgendada: row.data_agendada as string | null,
@@ -65,6 +67,9 @@ const projetoFieldsSchema = z.object({
   descricao: z.string().trim().nullable(),
   tipo: z.enum(TIPOS_PROJETO.map((t) => t.value) as [string, ...Array<string>]),
   status: z.enum(STATUS_PROJETO.map((s) => s.value) as [string, ...Array<string>]),
+  materialSistema: z
+    .enum(MATERIAIS_SISTEMA.map((m) => m.value) as [string, ...Array<string>])
+    .nullable(),
   valorCobrado: z.number().nullable(),
   dataPrevista: z
     .string()
@@ -88,6 +93,7 @@ export const criarProjeto = createServerFn({ method: 'POST' })
         descricao: data.descricao,
         tipo: data.tipo,
         status: data.status,
+        material_sistema: data.materialSistema,
         valor_cobrado: data.valorCobrado,
         data_prevista: data.dataPrevista,
         cliente_id: data.clienteId,
@@ -111,6 +117,7 @@ export const atualizarProjeto = createServerFn({ method: 'POST' })
         descricao: data.descricao,
         tipo: data.tipo,
         status: data.status,
+        material_sistema: data.materialSistema,
         valor_cobrado: data.valorCobrado,
         data_prevista: data.dataPrevista,
         cliente_id: data.clienteId,

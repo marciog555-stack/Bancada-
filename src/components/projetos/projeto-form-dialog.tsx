@@ -19,13 +19,14 @@ import {
   SelectValue,
 } from '#/components/ui/select'
 import { Textarea } from '#/components/ui/textarea'
-import { STATUS_PROJETO, TIPOS_PROJETO   } from '#/lib/projeto-tipos'
-import type {StatusProjeto, TipoProjeto} from '#/lib/projeto-tipos';
+import { STATUS_PROJETO, TIPOS_PROJETO, MATERIAIS_SISTEMA } from '#/lib/projeto-tipos'
+import type { StatusProjeto, TipoProjeto, MaterialSistema } from '#/lib/projeto-tipos'
 import { atualizarProjeto, criarProjeto } from '#/lib/server/projetos'
 import type { Projeto } from '#/lib/server/projetos'
 import { listarClientes } from '#/lib/server/clientes'
 
 const SEM_CLIENTE = 'sem-cliente'
+const SEM_MATERIAL = 'sem-material'
 
 export function ProjetoFormDialog({
   open,
@@ -47,6 +48,9 @@ export function ProjetoFormDialog({
   const [status, setStatus] = useState<StatusProjeto>(
     projeto ? (projeto.status as StatusProjeto) : 'orcamento',
   )
+  const [materialSistema, setMaterialSistema] = useState(
+    projeto?.materialSistema ?? SEM_MATERIAL,
+  )
   const [valorCobrado, setValorCobrado] = useState(
     projeto?.valorCobrado != null ? String(projeto.valorCobrado) : '',
   )
@@ -67,6 +71,7 @@ export function ProjetoFormDialog({
         descricao: descricao.trim() || null,
         tipo,
         status,
+        materialSistema: materialSistema === SEM_MATERIAL ? null : (materialSistema as MaterialSistema),
         valorCobrado: valorCobrado ? Number(valorCobrado) : null,
         dataPrevista: dataPrevista || null,
         clienteId: clienteId === SEM_CLIENTE ? null : clienteId,
@@ -164,6 +169,22 @@ export function ProjetoFormDialog({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Material do sistema</Label>
+            <Select value={materialSistema} onValueChange={setMaterialSistema}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={SEM_MATERIAL}>—</SelectItem>
+                {MATERIAIS_SISTEMA.map((m) => (
+                  <SelectItem key={m.value} value={m.value}>
+                    {m.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-2">

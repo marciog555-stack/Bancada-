@@ -20,10 +20,24 @@ export const STATUS_PROJETO = [
 
 export type StatusProjeto = (typeof STATUS_PROJETO)[number]['value']
 
+export const MATERIAIS_SISTEMA = [
+  { value: 'wpc', label: 'WPC' },
+  { value: 'pvc', label: 'PVC' },
+  { value: 'gesso', label: 'Gesso' },
+  { value: 'drywall', label: 'Drywall' },
+  { value: 'outro', label: 'Outro' },
+] as const
+
+export type MaterialSistema = (typeof MATERIAIS_SISTEMA)[number]['value']
+
 export function labelTipoProjeto(tipo: string): string {
   return TIPOS_PROJETO.find((t) => t.value === tipo)?.label ?? tipo
 }
 
 export function labelStatusProjeto(status: string): string {
   return STATUS_PROJETO.find((s) => s.value === status)?.label ?? status
+}
+
+export function labelMaterialSistema(material: string): string {
+  return MATERIAIS_SISTEMA.find((m) => m.value === material)?.label ?? material
 }

@@ -29,6 +29,7 @@ export function IaPrecoSection({ projeto }: { projeto: Projeto }) {
           descricao: projeto.descricao,
           tipo: projeto.tipo,
           status: projeto.status,
+          materialSistema: projeto.materialSistema,
           dataPrevista: projeto.dataPrevista,
           clienteId: projeto.clienteId,
           valorCobrado: valor,
