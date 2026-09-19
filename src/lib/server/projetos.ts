@@ -70,6 +70,7 @@ const projetoFieldsSchema = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
     .nullable(),
+  clienteId: z.string().uuid().nullable(),
 })
 
 export const criarProjeto = createServerFn({ method: 'POST' })
@@ -89,6 +90,7 @@ export const criarProjeto = createServerFn({ method: 'POST' })
         status: data.status,
         valor_cobrado: data.valorCobrado,
         data_prevista: data.dataPrevista,
+        cliente_id: data.clienteId,
       })
       .select('id')
       .single()
@@ -111,6 +113,7 @@ export const atualizarProjeto = createServerFn({ method: 'POST' })
         status: data.status,
         valor_cobrado: data.valorCobrado,
         data_prevista: data.dataPrevista,
+        cliente_id: data.clienteId,
       })
       .eq('id', data.id)
     if (error) throw new Error(error.message)

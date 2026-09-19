@@ -14,6 +14,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedIndexRouteImport } from './routes/_authed/index'
 import { Route as AuthedFerramentasRouteImport } from './routes/_authed/ferramentas'
 import { Route as AuthedPainelRouteImport } from './routes/_authed/painel'
+import { Route as AuthedClientesIndexRouteImport } from './routes/_authed/clientes/index'
+import { Route as AuthedClientesClienteIdRouteImport } from './routes/_authed/clientes/$clienteId'
 import { Route as AuthedProjetosIndexRouteImport } from './routes/_authed/projetos/index'
 import { Route as AuthedProjetosProjetoIdRouteImport } from './routes/_authed/projetos/$projetoId'
 
@@ -41,6 +43,16 @@ const AuthedPainelRoute = AuthedPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedClientesIndexRoute = AuthedClientesIndexRouteImport.update({
+  id: '/clientes/',
+  path: '/clientes/',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedClientesClienteIdRoute = AuthedClientesClienteIdRouteImport.update({
+  id: '/clientes/$clienteId',
+  path: '/clientes/$clienteId',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedProjetosIndexRoute = AuthedProjetosIndexRouteImport.update({
   id: '/projetos/',
   path: '/projetos/',
@@ -57,7 +69,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/ferramentas': typeof AuthedFerramentasRoute
   '/painel': typeof AuthedPainelRoute
+  '/clientes/$clienteId': typeof AuthedClientesClienteIdRoute
   '/projetos/$projetoId': typeof AuthedProjetosProjetoIdRoute
+  '/clientes/': typeof AuthedClientesIndexRoute
   '/projetos/': typeof AuthedProjetosIndexRoute
 }
 export interface FileRoutesByTo {
@@ -65,7 +79,9 @@ export interface FileRoutesByTo {
   '/ferramentas': typeof AuthedFerramentasRoute
   '/painel': typeof AuthedPainelRoute
   '/': typeof AuthedIndexRoute
+  '/clientes/$clienteId': typeof AuthedClientesClienteIdRoute
   '/projetos/$projetoId': typeof AuthedProjetosProjetoIdRoute
+  '/clientes': typeof AuthedClientesIndexRoute
   '/projetos': typeof AuthedProjetosIndexRoute
 }
 export interface FileRoutesById {
@@ -75,7 +91,9 @@ export interface FileRoutesById {
   '/_authed/ferramentas': typeof AuthedFerramentasRoute
   '/_authed/painel': typeof AuthedPainelRoute
   '/_authed/': typeof AuthedIndexRoute
+  '/_authed/clientes/$clienteId': typeof AuthedClientesClienteIdRoute
   '/_authed/projetos/$projetoId': typeof AuthedProjetosProjetoIdRoute
+  '/_authed/clientes/': typeof AuthedClientesIndexRoute
   '/_authed/projetos/': typeof AuthedProjetosIndexRoute
 }
 export interface FileRouteTypes {
@@ -85,7 +103,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/ferramentas'
     | '/painel'
+    | '/clientes/$clienteId'
     | '/projetos/$projetoId'
+    | '/clientes/'
     | '/projetos/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -93,7 +113,9 @@ export interface FileRouteTypes {
     | '/ferramentas'
     | '/painel'
     | '/'
+    | '/clientes/$clienteId'
     | '/projetos/$projetoId'
+    | '/clientes'
     | '/projetos'
   id:
     | '__root__'
@@ -102,7 +124,9 @@ export interface FileRouteTypes {
     | '/_authed/ferramentas'
     | '/_authed/painel'
     | '/_authed/'
+    | '/_authed/clientes/$clienteId'
     | '/_authed/projetos/$projetoId'
+    | '/_authed/clientes/'
     | '/_authed/projetos/'
   fileRoutesById: FileRoutesById
 }
@@ -148,6 +172,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedPainelRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/clientes/': {
+      id: '/_authed/clientes/'
+      path: '/clientes'
+      fullPath: '/clientes/'
+      preLoaderRoute: typeof AuthedClientesIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/clientes/$clienteId': {
+      id: '/_authed/clientes/$clienteId'
+      path: '/clientes/$clienteId'
+      fullPath: '/clientes/$clienteId'
+      preLoaderRoute: typeof AuthedClientesClienteIdRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/projetos/': {
       id: '/_authed/projetos/'
       path: '/projetos'
@@ -169,7 +207,9 @@ interface AuthedRouteChildren {
   AuthedFerramentasRoute: typeof AuthedFerramentasRoute
   AuthedPainelRoute: typeof AuthedPainelRoute
   AuthedIndexRoute: typeof AuthedIndexRoute
+  AuthedClientesClienteIdRoute: typeof AuthedClientesClienteIdRoute
   AuthedProjetosProjetoIdRoute: typeof AuthedProjetosProjetoIdRoute
+  AuthedClientesIndexRoute: typeof AuthedClientesIndexRoute
   AuthedProjetosIndexRoute: typeof AuthedProjetosIndexRoute
 }
 
@@ -177,7 +217,9 @@ const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedFerramentasRoute: AuthedFerramentasRoute,
   AuthedPainelRoute: AuthedPainelRoute,
   AuthedIndexRoute: AuthedIndexRoute,
+  AuthedClientesClienteIdRoute: AuthedClientesClienteIdRoute,
   AuthedProjetosProjetoIdRoute: AuthedProjetosProjetoIdRoute,
+  AuthedClientesIndexRoute: AuthedClientesIndexRoute,
   AuthedProjetosIndexRoute: AuthedProjetosIndexRoute,
 }
 

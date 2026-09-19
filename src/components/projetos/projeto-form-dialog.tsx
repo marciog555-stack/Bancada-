@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import {
@@ -21,8 +21,11 @@ import {
 import { Textarea } from '#/components/ui/textarea'
 import { STATUS_PROJETO, TIPOS_PROJETO   } from '#/lib/projeto-tipos'
 import type {StatusProjeto, TipoProjeto} from '#/lib/projeto-tipos';
-import { atualizarProjeto, criarProjeto  } from '#/lib/server/projetos'
-import type {Projeto} from '#/lib/server/projetos';
+import { atualizarProjeto, criarProjeto } from '#/lib/server/projetos'
+import type { Projeto } from '#/lib/server/projetos'
+import { listarClientes } from '#/lib/server/clientes'
+
+const SEM_CLIENTE = 'sem-cliente'
 
 export function ProjetoFormDialog({
   open,
@@ -48,7 +51,14 @@ export function ProjetoFormDialog({
     projeto?.valorCobrado != null ? String(projeto.valorCobrado) : '',
   )
   const [dataPrevista, setDataPrevista] = useState(projeto?.dataPrevista ?? '')
+  const [clienteId, setClienteId] = useState(projeto?.clienteId ?? SEM_CLIENTE)
   const queryClient = useQueryClient()
+
+  const clientesQuery = useQuery({
+    queryKey: ['clientes'],
+    queryFn: () => listarClientes(),
+    enabled: open,
+  })
 
   const mutation = useMutation({
     mutationFn: () => {
@@ -59,6 +69,7 @@ export function ProjetoFormDialog({
         status,
         valorCobrado: valorCobrado ? Number(valorCobrado) : null,
         dataPrevista: dataPrevista || null,
+        clienteId: clienteId === SEM_CLIENTE ? null : clienteId,
       }
       return editando
         ? atualizarProjeto({ data: { ...payload, id: projeto.id } })
@@ -97,6 +108,22 @@ export function ProjetoFormDialog({
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
             />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Cliente</Label>
+            <Select value={clienteId} onValueChange={setClienteId}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={SEM_CLIENTE}>Sem cliente</SelectItem>
+                {(clientesQuery.data ?? []).map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.nome}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="descricao-projeto">Descrição</Label>

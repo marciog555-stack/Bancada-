@@ -14,6 +14,7 @@ import { ResumoCard } from '#/components/projetos/resumo-card'
 import { formatBRL } from '#/lib/format'
 import { labelStatusProjeto, labelTipoProjeto } from '#/lib/projeto-tipos'
 import { excluirProjeto, obterProjeto } from '#/lib/server/projetos'
+import { obterCliente } from '#/lib/server/clientes'
 
 export const Route = createFileRoute('/_authed/projetos/$projetoId')({
   component: ProjetoDetailPage,
@@ -28,6 +29,13 @@ function ProjetoDetailPage() {
   const query = useQuery({
     queryKey: ['projeto', projetoId],
     queryFn: () => obterProjeto({ data: { id: projetoId } }),
+  })
+
+  const clienteId = query.data?.clienteId
+  const clienteQuery = useQuery({
+    queryKey: ['cliente', clienteId],
+    queryFn: () => obterCliente({ data: { id: clienteId ?? '' } }),
+    enabled: !!clienteId,
   })
 
   const excluirMutation = useMutation({
@@ -97,6 +105,15 @@ function ProjetoDetailPage() {
             ? ` · previsto ${projeto.dataPrevista.split('-').reverse().join('/')}`
             : ''}
         </p>
+        {clienteQuery.data ? (
+          <Link
+            to="/clientes/$clienteId"
+            params={{ clienteId: clienteQuery.data.id }}
+            className="text-sm text-primary"
+          >
+            Cliente: {clienteQuery.data.nome}
+          </Link>
+        ) : null}
         {projeto.descricao ? (
           <p className="mt-2 text-sm whitespace-pre-wrap">{projeto.descricao}</p>
         ) : null}

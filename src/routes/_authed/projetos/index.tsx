@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
+import { Plus, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
@@ -49,9 +49,16 @@ function ProjetosPage() {
     <main className="mx-auto flex max-w-md flex-col gap-4 px-4 pt-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Projetos</h1>
-        <Button size="icon" aria-label="Novo projeto" onClick={() => setNovoAberto(true)}>
-          <Plus className="size-5" />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Link to="/clientes" aria-label="Clientes">
+            <Button variant="ghost" size="icon">
+              <Users className="size-5" />
+            </Button>
+          </Link>
+          <Button size="icon" aria-label="Novo projeto" onClick={() => setNovoAberto(true)}>
+            <Plus className="size-5" />
+          </Button>
+        </div>
       </div>
 
       {projetos.length === 0 ? (
