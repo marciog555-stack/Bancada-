@@ -92,7 +92,7 @@ Responda SOMENTE com um JSON válido (sem cercas de markdown, sem texto antes ou
       json = JSON.parse(limparCercasJson(resposta))
     } catch {
       // TODO: mensagem de diagnóstico temporária.
-      throw new Error(`[debug parse] ${resposta.slice(0, 500)}`)
+      throw new Error(`[debug len=${resposta.length}] ...${resposta.slice(-400)}`)
     }
 
     const parseResult = planoSchema.safeParse(json)
