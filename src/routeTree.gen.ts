@@ -14,7 +14,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedIndexRouteImport } from './routes/_authed/index'
 import { Route as AuthedFerramentasRouteImport } from './routes/_authed/ferramentas'
 import { Route as AuthedPainelRouteImport } from './routes/_authed/painel'
-import { Route as AuthedProjetosRouteImport } from './routes/_authed/projetos'
+import { Route as AuthedProjetosIndexRouteImport } from './routes/_authed/projetos/index'
+import { Route as AuthedProjetosProjetoIdRouteImport } from './routes/_authed/projetos/$projetoId'
 
 const AuthedRoute = AuthedRouteImport.update({
   id: '/_authed',
@@ -40,9 +41,14 @@ const AuthedPainelRoute = AuthedPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => AuthedRoute,
 } as any)
-const AuthedProjetosRoute = AuthedProjetosRouteImport.update({
-  id: '/projetos',
-  path: '/projetos',
+const AuthedProjetosIndexRoute = AuthedProjetosIndexRouteImport.update({
+  id: '/projetos/',
+  path: '/projetos/',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedProjetosProjetoIdRoute = AuthedProjetosProjetoIdRouteImport.update({
+  id: '/projetos/$projetoId',
+  path: '/projetos/$projetoId',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -51,14 +57,16 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/ferramentas': typeof AuthedFerramentasRoute
   '/painel': typeof AuthedPainelRoute
-  '/projetos': typeof AuthedProjetosRoute
+  '/projetos/$projetoId': typeof AuthedProjetosProjetoIdRoute
+  '/projetos/': typeof AuthedProjetosIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/ferramentas': typeof AuthedFerramentasRoute
   '/painel': typeof AuthedPainelRoute
-  '/projetos': typeof AuthedProjetosRoute
   '/': typeof AuthedIndexRoute
+  '/projetos/$projetoId': typeof AuthedProjetosProjetoIdRoute
+  '/projetos': typeof AuthedProjetosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -66,22 +74,36 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_authed/ferramentas': typeof AuthedFerramentasRoute
   '/_authed/painel': typeof AuthedPainelRoute
-  '/_authed/projetos': typeof AuthedProjetosRoute
   '/_authed/': typeof AuthedIndexRoute
+  '/_authed/projetos/$projetoId': typeof AuthedProjetosProjetoIdRoute
+  '/_authed/projetos/': typeof AuthedProjetosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/ferramentas' | '/painel' | '/projetos'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/ferramentas'
+    | '/painel'
+    | '/projetos/$projetoId'
+    | '/projetos/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/ferramentas' | '/painel' | '/projetos' | '/'
+  to:
+    | '/login'
+    | '/ferramentas'
+    | '/painel'
+    | '/'
+    | '/projetos/$projetoId'
+    | '/projetos'
   id:
     | '__root__'
     | '/_authed'
     | '/login'
     | '/_authed/ferramentas'
     | '/_authed/painel'
-    | '/_authed/projetos'
     | '/_authed/'
+    | '/_authed/projetos/$projetoId'
+    | '/_authed/projetos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -126,11 +148,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedPainelRouteImport
       parentRoute: typeof AuthedRoute
     }
-    '/_authed/projetos': {
-      id: '/_authed/projetos'
+    '/_authed/projetos/': {
+      id: '/_authed/projetos/'
       path: '/projetos'
-      fullPath: '/projetos'
-      preLoaderRoute: typeof AuthedProjetosRouteImport
+      fullPath: '/projetos/'
+      preLoaderRoute: typeof AuthedProjetosIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/projetos/$projetoId': {
+      id: '/_authed/projetos/$projetoId'
+      path: '/projetos/$projetoId'
+      fullPath: '/projetos/$projetoId'
+      preLoaderRoute: typeof AuthedProjetosProjetoIdRouteImport
       parentRoute: typeof AuthedRoute
     }
   }
@@ -139,15 +168,17 @@ declare module '@tanstack/react-router' {
 interface AuthedRouteChildren {
   AuthedFerramentasRoute: typeof AuthedFerramentasRoute
   AuthedPainelRoute: typeof AuthedPainelRoute
-  AuthedProjetosRoute: typeof AuthedProjetosRoute
   AuthedIndexRoute: typeof AuthedIndexRoute
+  AuthedProjetosProjetoIdRoute: typeof AuthedProjetosProjetoIdRoute
+  AuthedProjetosIndexRoute: typeof AuthedProjetosIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedFerramentasRoute: AuthedFerramentasRoute,
   AuthedPainelRoute: AuthedPainelRoute,
-  AuthedProjetosRoute: AuthedProjetosRoute,
   AuthedIndexRoute: AuthedIndexRoute,
+  AuthedProjetosProjetoIdRoute: AuthedProjetosProjetoIdRoute,
+  AuthedProjetosIndexRoute: AuthedProjetosIndexRoute,
 }
 
 const AuthedRouteWithChildren =
