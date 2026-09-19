@@ -6,6 +6,8 @@ import { toast } from 'sonner'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
 import { FerramentasSection } from '#/components/projetos/ferramentas-section'
+import { IaPlanoSection } from '#/components/projetos/ia-plano-section'
+import { IaPrecoSection } from '#/components/projetos/ia-preco-section'
 import { MateriaisSection } from '#/components/projetos/materiais-section'
 import { PagamentosSection } from '#/components/projetos/pagamentos-section'
 import { PontoSection } from '#/components/projetos/ponto-section'
@@ -119,10 +121,12 @@ function ProjetoDetailPage() {
         ) : null}
       </div>
 
+      <IaPlanoSection projetoId={projeto.id} />
       <FerramentasSection projetoId={projeto.id} />
       <MateriaisSection projetoId={projeto.id} />
       <PagamentosSection projetoId={projeto.id} />
       <PontoSection projetoId={projeto.id} />
+      <IaPrecoSection projeto={projeto} />
       <ResumoCard projetoId={projeto.id} />
 
       <ProjetoFormDialog
