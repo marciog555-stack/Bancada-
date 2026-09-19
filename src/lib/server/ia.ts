@@ -85,20 +85,18 @@ Responda SOMENTE com um JSON válido (sem cercas de markdown, sem texto antes ou
   "observacoes": ""
 }`
 
-    const resposta = await chamarClaude({ prompt, maxTokens: 3000 })
+    const resposta = await chamarClaude({ prompt, maxTokens: 8000 })
 
     let json: unknown
     try {
       json = JSON.parse(limparCercasJson(resposta))
     } catch {
-      // TODO: mensagem de diagnóstico temporária.
-      throw new Error(`[debug len=${resposta.length}] ...${resposta.slice(-400)}`)
+      throw new Error('A IA respondeu num formato inesperado. Tenta de novo.')
     }
 
     const parseResult = planoSchema.safeParse(json)
     if (!parseResult.success) {
-      // TODO: mensagem de diagnóstico temporária.
-      throw new Error(`[debug schema] ${JSON.stringify(parseResult.error.issues).slice(0, 500)}`)
+      throw new Error('A IA respondeu num formato inesperado. Tenta de novo.')
     }
     const plano = parseResult.data
 
@@ -206,7 +204,7 @@ Responda SOMENTE com um JSON válido (sem cercas de markdown, sem texto antes ou
   "justificativa": ""
 }`
 
-    const resposta = await chamarClaude({ prompt, maxTokens: 600 })
+    const resposta = await chamarClaude({ prompt, maxTokens: 2000 })
 
     let json: unknown
     try {
