@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus, Users } from 'lucide-react'
+import { FileText, Plus, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
@@ -50,6 +50,11 @@ function ProjetosPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Projetos</h1>
         <div className="flex items-center gap-1">
+          <Link to="/modelos" aria-label="Modelos">
+            <Button variant="ghost" size="icon">
+              <FileText className="size-5" />
+            </Button>
+          </Link>
           <Link to="/clientes" aria-label="Clientes">
             <Button variant="ghost" size="icon">
               <Users className="size-5" />

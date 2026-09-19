@@ -16,6 +16,7 @@ import { Route as AuthedFerramentasRouteImport } from './routes/_authed/ferramen
 import { Route as AuthedPainelRouteImport } from './routes/_authed/painel'
 import { Route as AuthedClientesIndexRouteImport } from './routes/_authed/clientes/index'
 import { Route as AuthedClientesClienteIdRouteImport } from './routes/_authed/clientes/$clienteId'
+import { Route as AuthedModelosIndexRouteImport } from './routes/_authed/modelos/index'
 import { Route as AuthedProjetosIndexRouteImport } from './routes/_authed/projetos/index'
 import { Route as AuthedProjetosProjetoIdRouteImport } from './routes/_authed/projetos/$projetoId'
 
@@ -53,6 +54,11 @@ const AuthedClientesClienteIdRoute = AuthedClientesClienteIdRouteImport.update({
   path: '/clientes/$clienteId',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedModelosIndexRoute = AuthedModelosIndexRouteImport.update({
+  id: '/modelos/',
+  path: '/modelos/',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedProjetosIndexRoute = AuthedProjetosIndexRouteImport.update({
   id: '/projetos/',
   path: '/projetos/',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/clientes/$clienteId': typeof AuthedClientesClienteIdRoute
   '/projetos/$projetoId': typeof AuthedProjetosProjetoIdRoute
   '/clientes/': typeof AuthedClientesIndexRoute
+  '/modelos/': typeof AuthedModelosIndexRoute
   '/projetos/': typeof AuthedProjetosIndexRoute
 }
 export interface FileRoutesByTo {
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/clientes/$clienteId': typeof AuthedClientesClienteIdRoute
   '/projetos/$projetoId': typeof AuthedProjetosProjetoIdRoute
   '/clientes': typeof AuthedClientesIndexRoute
+  '/modelos': typeof AuthedModelosIndexRoute
   '/projetos': typeof AuthedProjetosIndexRoute
 }
 export interface FileRoutesById {
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/_authed/clientes/$clienteId': typeof AuthedClientesClienteIdRoute
   '/_authed/projetos/$projetoId': typeof AuthedProjetosProjetoIdRoute
   '/_authed/clientes/': typeof AuthedClientesIndexRoute
+  '/_authed/modelos/': typeof AuthedModelosIndexRoute
   '/_authed/projetos/': typeof AuthedProjetosIndexRoute
 }
 export interface FileRouteTypes {
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/clientes/$clienteId'
     | '/projetos/$projetoId'
     | '/clientes/'
+    | '/modelos/'
     | '/projetos/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/clientes/$clienteId'
     | '/projetos/$projetoId'
     | '/clientes'
+    | '/modelos'
     | '/projetos'
   id:
     | '__root__'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/_authed/clientes/$clienteId'
     | '/_authed/projetos/$projetoId'
     | '/_authed/clientes/'
+    | '/_authed/modelos/'
     | '/_authed/projetos/'
   fileRoutesById: FileRoutesById
 }
@@ -186,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedClientesClienteIdRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/modelos/': {
+      id: '/_authed/modelos/'
+      path: '/modelos'
+      fullPath: '/modelos/'
+      preLoaderRoute: typeof AuthedModelosIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/projetos/': {
       id: '/_authed/projetos/'
       path: '/projetos'
@@ -210,6 +229,7 @@ interface AuthedRouteChildren {
   AuthedClientesClienteIdRoute: typeof AuthedClientesClienteIdRoute
   AuthedProjetosProjetoIdRoute: typeof AuthedProjetosProjetoIdRoute
   AuthedClientesIndexRoute: typeof AuthedClientesIndexRoute
+  AuthedModelosIndexRoute: typeof AuthedModelosIndexRoute
   AuthedProjetosIndexRoute: typeof AuthedProjetosIndexRoute
 }
 
@@ -220,6 +240,7 @@ const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedClientesClienteIdRoute: AuthedClientesClienteIdRoute,
   AuthedProjetosProjetoIdRoute: AuthedProjetosProjetoIdRoute,
   AuthedClientesIndexRoute: AuthedClientesIndexRoute,
+  AuthedModelosIndexRoute: AuthedModelosIndexRoute,
   AuthedProjetosIndexRoute: AuthedProjetosIndexRoute,
 }
 
